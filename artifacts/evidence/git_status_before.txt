@@ -1,0 +1,8 @@
+ M acceptance_spec.yaml
+ M dev_plan.yaml
+ M documentation.md
+ M implement.md
+ M phase0_result.json
+ M run_policy.yaml
+ M spec.md
+?? artifacts/evidence/git_status_before.txt

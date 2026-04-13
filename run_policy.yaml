@@ -4,11 +4,18 @@ execution:
   approval_policy: never
   model: gpt-5.3-codex
   reasoning_effort: high
+
 shared_resources:
-  port_policy: Phase0不分配端口
-  db_migration_policy: 禁止数据库迁移
-  env_isolation_policy: 证据统一写入artifacts/evidence
+  port_policy: Phase0 不分配端口；Phase1 开始前需在计划中显式登记。
+  db_migration_policy: 禁止数据库迁移，除非业务仓库与数据模型已确认。
+  env_isolation_policy: 所有证据写入 artifacts/evidence，避免污染系统全局目录。
+
 failure_policy:
   max_retries: 2
-  circuit_breaker: [schema校验连续失败, 请求越界到大规模实现]
-  manual_gate_conditions: [进入Phase1前人工确认目标仓库]
+  circuit_breaker:
+    - phase0 output schema 校验连续失败
+    - 请求越界至大规模实现
+    - 关键输入文件缺失且无法建立等价映射
+  manual_gate_conditions:
+    - 进入 Phase1 前确认目标仓库
+    - 需要合并双入口 guidance 前先确定单一真源策略

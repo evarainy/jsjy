@@ -1,28 +1,171 @@
-run_id: phase0-jsjy-2026-04-13
+run_id: phase0-jsjy-2026-04-13-reaudit
 tasks:
   - id: P0-001
-    title: Recon
-    goal: 盘点仓库并记录证据
+    title: Repository inventory
+    goal: 盘点仓库并固化基础证据。
     deps: []
-    touched_paths: [documentation.md, artifacts/evidence/repo_inventory.txt]
-    forbidden_paths: [.git/]
-    acceptance_ids: [AC-001]
+    touched_paths:
+      - artifacts/evidence/repo_inventory.txt
+      - artifacts/evidence/git_status_before.txt
+      - documentation.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-001
+      - AC-002
     parallel_safe: true
     needs_db: false
     needs_ports: []
-    verification_commands: ["rg --files"]
-    evidence_paths: [artifacts/evidence/repo_inventory.txt]
-    notes: ["phase0 only"]
+    verification_commands:
+      - rg --files
+      - git status --short
+    evidence_paths:
+      - artifacts/evidence/repo_inventory.txt
+      - artifacts/evidence/git_status_before.txt
+    notes:
+      - 仅采集证据，不做实现。
+
   - id: P0-002
-    title: Produce phase0 docs
-    goal: 生成 spec/plan/acceptance/policy/result
-    deps: [P0-001]
-    touched_paths: [spec.md, dev_plan.yaml, acceptance_spec.yaml, run_policy.yaml, implement.md, documentation.md, phase0_result.json]
-    forbidden_paths: [.git/]
-    acceptance_ids: [AC-002, AC-003]
+    title: Scope freeze
+    goal: 冻结目标、范围、非目标、约束与风险。
+    deps:
+      - P0-001
+    touched_paths:
+      - spec.md
+    forbidden_paths:
+      - src/
+      - app/
+      - .git/
+    acceptance_ids:
+      - AC-003
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    verification_commands:
+      - rg -n "^## (Goals|In scope|Non-goals|Constraints|Assumptions|Dependencies|Risks|Open questions|Current repository evidence)" spec.md
+    evidence_paths:
+      - spec.md
+    notes:
+      - spec 必须包含完整章节。
+
+  - id: P0-003
+    title: Build acceptance catalog
+    goal: 产出可机读、可判定的验收条目。
+    deps:
+      - P0-002
+    touched_paths:
+      - acceptance_spec.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-004
+      - AC-005
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    verification_commands:
+      - python codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py
+    evidence_paths:
+      - artifacts/evidence/phase0_validation.log
+    notes:
+      - 验收项必须有 evidence 字段。
+
+  - id: P0-004
+    title: Build task graph
+    goal: 细粒度任务拆分并绑定 acceptance ids。
+    deps:
+      - P0-003
+    touched_paths:
+      - dev_plan.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-006
     parallel_safe: false
     needs_db: false
     needs_ports: []
-    verification_commands: ["python codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py"]
-    evidence_paths: [artifacts/evidence/phase0_validation.log]
-    notes: ["schema + cross-link"]
+    verification_commands:
+      - python codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py
+    evidence_paths:
+      - artifacts/evidence/phase0_validation.log
+    notes:
+      - cross-link 必须可解析。
+
+  - id: P0-005
+    title: Define run policy
+    goal: 声明执行并行度、资源隔离、失败策略和人工闸门。
+    deps:
+      - P0-002
+    touched_paths:
+      - run_policy.yaml
+      - implement.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-007
+      - AC-008
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    verification_commands:
+      - python codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py
+    evidence_paths:
+      - artifacts/evidence/phase0_validation.log
+    notes:
+      - 模型与审批策略需明确。
+
+  - id: P0-006
+    title: Curate root guidance entrypoints
+    goal: 维护根目录 prompt/contract/checklist 入口，便于自动消费。
+    deps:
+      - P0-002
+    touched_paths:
+      - prompts/codex_plan_mode_prompt.md
+      - templates/phase0_output_contract.md
+      - checklists/phase0_review_checklist.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-009
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    verification_commands:
+      - test -f prompts/codex_plan_mode_prompt.md
+      - test -f templates/phase0_output_contract.md
+      - test -f checklists/phase0_review_checklist.md
+    evidence_paths:
+      - prompts/codex_plan_mode_prompt.md
+      - templates/phase0_output_contract.md
+      - checklists/phase0_review_checklist.md
+    notes:
+      - 保持入口可读性和稳定路径。
+
+  - id: P0-007
+    title: Publish phase0 result
+    goal: 生成结构化结果并真实声明 readiness。
+    deps:
+      - P0-003
+      - P0-004
+      - P0-005
+      - P0-006
+    touched_paths:
+      - phase0_result.json
+      - documentation.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-010
+      - AC-011
+      - AC-012
+    parallel_safe: false
+    needs_db: false
+    needs_ports: []
+    verification_commands:
+      - python codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py
+      - python codex_phase0_startup_pack_v2/scripts/validate_startup_pack.py
+    evidence_paths:
+      - artifacts/evidence/phase0_validation.log
+      - artifacts/evidence/startup_pack_validation.log
+    notes:
+      - next_step 必须可执行。

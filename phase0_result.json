@@ -11,20 +11,41 @@
     "phase0_result.json",
     "prompts/codex_plan_mode_prompt.md",
     "templates/phase0_output_contract.md",
-    "checklists/phase0_review_checklist.md"
+    "checklists/phase0_review_checklist.md",
+    "schemas/dev_plan.schema.json",
+    "schemas/acceptance_spec.schema.json",
+    "schemas/run_policy.schema.json",
+    "schemas/output_schema_phase0.json"
   ],
   "missing_files": [],
   "blockers": [],
-  "risks": ["业务上下文有限"],
+  "risks": [
+    "仓库尚无业务代码，Phase1 业务产出依赖目标仓库确认。",
+    "启动包内与根目录 guidance 双入口存在后续漂移风险。"
+  ],
   "repo_summary": {
-    "tech_stack": ["Markdown", "YAML", "JSON Schema", "Python"],
-    "key_modules": ["codex_phase0_startup_pack_v2", "prompts", "templates", "checklists", "schemas"],
-    "test_state": "phase0 validators available",
-    "unknowns": ["是否为最终业务仓库"]
+    "tech_stack": [
+      "Markdown",
+      "YAML",
+      "JSON Schema",
+      "Python"
+    ],
+    "key_modules": [
+      "codex_phase0_startup_pack_v2",
+      "prompts",
+      "templates",
+      "checklists",
+      "schemas"
+    ],
+    "test_state": "Phase0 validators passing.",
+    "unknowns": [
+      "是否在本仓库进入 Phase1",
+      "guidance 是否收敛为单一真源"
+    ]
   },
   "readiness": {
     "ready_for_phase1": true,
-    "reason": "phase0 outputs ready"
+    "reason": "Phase0 required outputs complete and schema-validated; execution can proceed after target-repo intent confirmation."
   },
-  "next_step": "确认目标仓库并进入phase1"
+  "next_step": "确认目标仓库与 guidance 真源策略后，按 dev_plan 开始受控 Phase1 执行。"
 }

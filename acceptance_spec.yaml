@@ -1,20 +1,145 @@
 acceptance:
   - id: AC-001
-    title: inventory evidence exists
+    title: inventory artifact exists
     type: cli
-    trigger: run rg --files
-    expect: {exit_code: 0}
-    evidence: [artifacts/evidence/repo_inventory.txt]
-  - id: AC-002
-    title: schemas pass
-    type: cli
-    trigger: run validator
-    expect: {exit_code: 0}
-    evidence: [artifacts/evidence/phase0_validation.log]
-  - id: AC-003
-    title: required outputs exist
-    type: other
-    trigger: check root files
+    trigger: run rg --files > artifacts/evidence/repo_inventory.txt
     expect:
-      contains_all: [spec.md, dev_plan.yaml, acceptance_spec.yaml, run_policy.yaml, implement.md, documentation.md, phase0_result.json]
-    evidence: [phase0_result.json]
+      exit_code: 0
+      artifacts_exist:
+        - artifacts/evidence/repo_inventory.txt
+    evidence:
+      - artifacts/evidence/repo_inventory.txt
+
+  - id: AC-002
+    title: git status snapshot exists
+    type: cli
+    trigger: run git status --short > artifacts/evidence/git_status_before.txt
+    expect:
+      exit_code: 0
+      artifacts_exist:
+        - artifacts/evidence/git_status_before.txt
+    evidence:
+      - artifacts/evidence/git_status_before.txt
+
+  - id: AC-003
+    title: spec sections complete
+    type: other
+    trigger: parse spec markdown sections
+    expect:
+      required_headers:
+        - "## Goals"
+        - "## In scope"
+        - "## Non-goals"
+        - "## Constraints"
+        - "## Assumptions"
+        - "## Dependencies"
+        - "## Risks"
+        - "## Open questions"
+        - "## Current repository evidence"
+    evidence:
+      - spec.md
+
+  - id: AC-004
+    title: acceptance schema valid
+    type: cli
+    trigger: run phase0 output validator
+    expect:
+      exit_code: 0
+      stdout_contains:
+        - '"ok": true'
+    evidence:
+      - artifacts/evidence/phase0_validation.log
+
+  - id: AC-005
+    title: every acceptance item has evidence
+    type: other
+    trigger: inspect acceptance_spec.yaml
+    expect:
+      each_item_has_non_empty_evidence: true
+    evidence:
+      - acceptance_spec.yaml
+
+  - id: AC-006
+    title: dev plan and acceptance ids cross-link cleanly
+    type: integration
+    trigger: run phase0 output validator cross-link check
+    expect:
+      unresolved_acceptance_ids: []
+    evidence:
+      - artifacts/evidence/phase0_validation.log
+
+  - id: AC-007
+    title: run policy schema valid
+    type: cli
+    trigger: run phase0 output validator
+    expect:
+      exit_code: 0
+      stdout_contains:
+        - '"ok": true'
+    evidence:
+      - artifacts/evidence/phase0_validation.log
+
+  - id: AC-008
+    title: implement contract includes required task result fields
+    type: other
+    trigger: inspect implement.md
+    expect:
+      contains_all:
+        - task_id
+        - status
+        - changed_files
+        - tests_run
+        - evidence_paths
+    evidence:
+      - implement.md
+
+  - id: AC-009
+    title: root guidance entry files exist
+    type: cli
+    trigger: run file existence checks
+    expect:
+      files_exist:
+        - prompts/codex_plan_mode_prompt.md
+        - templates/phase0_output_contract.md
+        - checklists/phase0_review_checklist.md
+    evidence:
+      - prompts/codex_plan_mode_prompt.md
+      - templates/phase0_output_contract.md
+      - checklists/phase0_review_checklist.md
+
+  - id: AC-010
+    title: phase0_result schema valid
+    type: cli
+    trigger: run phase0 output validator
+    expect:
+      exit_code: 0
+      stdout_contains:
+        - '"ok": true'
+    evidence:
+      - artifacts/evidence/phase0_validation.log
+
+  - id: AC-011
+    title: phase0_result generated_files complete
+    type: other
+    trigger: inspect phase0_result.json
+    expect:
+      contains_all:
+        - spec.md
+        - dev_plan.yaml
+        - acceptance_spec.yaml
+        - run_policy.yaml
+        - implement.md
+        - documentation.md
+        - phase0_result.json
+    evidence:
+      - phase0_result.json
+
+  - id: AC-012
+    title: next step and readiness reason are non-empty
+    type: other
+    trigger: inspect phase0_result.json readiness + next_step
+    expect:
+      readiness_has_reason: true
+      next_step_non_empty: true
+    evidence:
+      - phase0_result.json
