@@ -1,0 +1,28 @@
+run_id: phase0-jsjy-2026-04-13
+tasks:
+  - id: P0-001
+    title: Recon
+    goal: 盘点仓库并记录证据
+    deps: []
+    touched_paths: [documentation.md, artifacts/evidence/repo_inventory.txt]
+    forbidden_paths: [.git/]
+    acceptance_ids: [AC-001]
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    verification_commands: ["rg --files"]
+    evidence_paths: [artifacts/evidence/repo_inventory.txt]
+    notes: ["phase0 only"]
+  - id: P0-002
+    title: Produce phase0 docs
+    goal: 生成 spec/plan/acceptance/policy/result
+    deps: [P0-001]
+    touched_paths: [spec.md, dev_plan.yaml, acceptance_spec.yaml, run_policy.yaml, implement.md, documentation.md, phase0_result.json]
+    forbidden_paths: [.git/]
+    acceptance_ids: [AC-002, AC-003]
+    parallel_safe: false
+    needs_db: false
+    needs_ports: []
+    verification_commands: ["python codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py"]
+    evidence_paths: [artifacts/evidence/phase0_validation.log]
+    notes: ["schema + cross-link"]

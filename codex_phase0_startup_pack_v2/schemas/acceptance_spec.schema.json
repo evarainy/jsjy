@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Acceptance Spec Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "acceptance"
+  ],
+  "properties": {
+    "acceptance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "type",
+          "expect",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "api",
+              "ui",
+              "db",
+              "cli",
+              "integration",
+              "contract",
+              "unit",
+              "e2e",
+              "other"
+            ]
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "precondition": {
+            "type": "object"
+          },
+          "given": {
+            "type": "object"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "expect": {
+            "type": "object"
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

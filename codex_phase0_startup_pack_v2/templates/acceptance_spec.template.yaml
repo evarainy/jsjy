@@ -1,0 +1,14 @@
+acceptance:
+  - id: AC-EXAMPLE-001
+    title: Example acceptance item
+    type: api
+    endpoint: POST /api/example
+    given:
+      input: valid
+    expect:
+      status: 200
+      json_paths:
+        - path: $.code
+          equals: 0
+    evidence:
+      - artifacts/evidence/example_response.json

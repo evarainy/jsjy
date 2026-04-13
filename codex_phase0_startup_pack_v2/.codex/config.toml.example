@@ -1,0 +1,12 @@
+# .codex/config.toml.example
+# Copy to .codex/config.toml if you want repo-scoped defaults.
+
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+notify = false
+
+[windows]
+sandbox = "elevated"

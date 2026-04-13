@@ -1,0 +1,20 @@
+acceptance:
+  - id: AC-001
+    title: inventory evidence exists
+    type: cli
+    trigger: run rg --files
+    expect: {exit_code: 0}
+    evidence: [artifacts/evidence/repo_inventory.txt]
+  - id: AC-002
+    title: schemas pass
+    type: cli
+    trigger: run validator
+    expect: {exit_code: 0}
+    evidence: [artifacts/evidence/phase0_validation.log]
+  - id: AC-003
+    title: required outputs exist
+    type: other
+    trigger: check root files
+    expect:
+      contains_all: [spec.md, dev_plan.yaml, acceptance_spec.yaml, run_policy.yaml, implement.md, documentation.md, phase0_result.json]
+    evidence: [phase0_result.json]

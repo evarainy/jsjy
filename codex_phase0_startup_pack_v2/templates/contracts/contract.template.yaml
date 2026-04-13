@@ -1,0 +1,22 @@
+contract_id: CONTRACT-EXAMPLE-001
+name: Example service contract
+kind: api
+version: 1
+request:
+  method: POST
+  path: /api/example
+  body:
+    required_fields:
+      - name
+response:
+  success:
+    status: 200
+    required_fields:
+      - code
+      - data
+  failure:
+    status: 400
+    prohibited_fields:
+      - data.token
+notes:
+  - Describe ownership, backward compatibility, and consumer expectations.

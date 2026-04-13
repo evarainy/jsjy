@@ -1,0 +1,21 @@
+run_id: example-run-id
+tasks:
+  - id: EXAMPLE-001
+    title: Example bounded task
+    goal: State one concrete goal
+    deps: []
+    touched_paths:
+      - src/example/
+    forbidden_paths:
+      - db/migrations/
+    acceptance_ids:
+      - AC-EXAMPLE-001
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    verification_commands:
+      - npm test -- example
+    evidence_paths:
+      - artifacts/evidence/example.txt
+    notes:
+      - Keep task bounded to one code surface

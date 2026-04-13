@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Codex Phase 0 Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "phase",
+    "status",
+    "generated_files",
+    "missing_files",
+    "blockers",
+    "risks",
+    "repo_summary",
+    "readiness",
+    "next_step"
+  ],
+  "properties": {
+    "phase": {
+      "type": "string",
+      "const": "phase0"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial",
+        "failed"
+      ]
+    },
+    "generated_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "missing_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "repo_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tech_stack",
+        "key_modules",
+        "test_state",
+        "unknowns"
+      ],
+      "properties": {
+        "tech_stack": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "key_modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "test_state": {
+          "type": "string"
+        },
+        "unknowns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ready_for_phase1",
+        "reason"
+      ],
+      "properties": {
+        "ready_for_phase1": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
+    "next_step": {
+      "type": "string"
+    }
+  }
+}

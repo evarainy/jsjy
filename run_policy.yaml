@@ -1,0 +1,14 @@
+execution:
+  max_parallel_tasks: 2
+  sandbox_mode: danger-full-access
+  approval_policy: never
+  model: gpt-5.3-codex
+  reasoning_effort: high
+shared_resources:
+  port_policy: Phase0不分配端口
+  db_migration_policy: 禁止数据库迁移
+  env_isolation_policy: 证据统一写入artifacts/evidence
+failure_policy:
+  max_retries: 2
+  circuit_breaker: [schema校验连续失败, 请求越界到大规模实现]
+  manual_gate_conditions: [进入Phase1前人工确认目标仓库]

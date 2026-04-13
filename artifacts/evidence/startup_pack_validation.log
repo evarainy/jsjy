@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "checked": [
+    "AGENTS.md",
+    "planning/PLANS.md",
+    "prompts/phase0_prompt.md",
+    "schemas/output_schema_phase0.json",
+    "schemas/dev_plan.schema.json",
+    "schemas/acceptance_spec.schema.json",
+    "schemas/run_policy.schema.json",
+    "templates/spec.template.md",
+    "templates/dev_plan.template.yaml",
+    "templates/acceptance_spec.template.yaml",
+    "templates/run_policy.template.yaml",
+    "templates/implement.template.md",
+    "templates/documentation.template.md",
+    "templates/contracts/contract.template.yaml"
+  ]
+}

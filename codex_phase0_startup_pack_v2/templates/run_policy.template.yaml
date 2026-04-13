@@ -1,0 +1,22 @@
+execution:
+  max_parallel_tasks: 3
+  sandbox_mode: workspace-write
+  approval_policy: never
+  model: gpt-5.4
+  reasoning_effort: high
+
+shared_resources:
+  port_policy: Assign a unique port block per worktree and reserve them in commander state.
+  db_migration_policy: Generate migration files during task execution, but apply DB migrations only during integration.
+  env_isolation_policy: Each worktree must use an isolated env file and isolated temp/log/output directories.
+
+failure_policy:
+  max_retries: 2
+  circuit_breaker:
+    - repeated merge conflict on same task
+    - unresolved schema inconsistency
+    - failing repo bootstrap with no reproducible fix
+  manual_gate_conditions:
+    - missing product decision
+    - missing secret or inaccessible private dependency
+    - ambiguous contract that changes multiple services
