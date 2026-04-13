@@ -1,0 +1,370 @@
+run_id: phase0-business-specfirst-2026-04-13
+tasks:
+  - id: T-SPEC-001
+    title: Evidence inventory and boundary confirmation
+    layer: spec
+    goal: Enumerate real repository assets and confirm absence/presence of business runtime modules.
+    deps: []
+    touched_paths:
+      - planning/documentation.md
+      - planning/repo_cleanup_report.md
+      - artifacts/evidence/repo_tree_after_cleanup.txt
+    forbidden_paths:
+      - .git/
+      - planning_archive/legacy_bootstrap/
+    acceptance_ids:
+      - AC-001
+      - AC-002
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - repository filesystem metadata
+    verification_commands:
+      - rg --files
+      - test -f prompts/business_repo_plan_prompt.md
+    evidence_paths:
+      - artifacts/evidence/repo_tree_after_cleanup.txt
+    human_gate: false
+    notes:
+      - Record evidence source for every major planning conclusion.
+
+  - id: T-SPEC-002
+    title: Product spec authoring (markdown)
+    layer: spec
+    goal: Produce human-readable product-level planning scope for current repository reality.
+    deps:
+      - T-SPEC-001
+    touched_paths:
+      - spec/product_spec.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-003
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - rg -n "^## (Goals|In scope|Non-goals|Constraints|Assumptions|Dependencies|Risks|Open questions|Current repository evidence)" spec/product_spec.md
+    evidence_paths:
+      - spec/product_spec.md
+    human_gate: false
+    notes:
+      - Must explicitly state no broad implementation in this phase.
+
+  - id: T-SPEC-003
+    title: Product spec authoring (yaml)
+    layer: spec
+    goal: Produce machine-readable high-level scope with gates and unknowns.
+    deps:
+      - T-SPEC-002
+    touched_paths:
+      - spec/product_spec.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-004
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - test -f spec/product_spec.yaml
+    evidence_paths:
+      - spec/product_spec.yaml
+    human_gate: false
+    notes:
+      - Include explicit human_gates for target repo confirmation.
+
+  - id: T-SPEC-004
+    title: Module decomposition spec
+    layer: spec
+    goal: Define modules/subsystems from observed repository structures.
+    deps:
+      - T-SPEC-001
+    touched_paths:
+      - spec/module_spec.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-005
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - test -f spec/module_spec.yaml
+    evidence_paths:
+      - spec/module_spec.yaml
+    human_gate: false
+    notes:
+      - Must avoid inventing unavailable business modules.
+
+  - id: T-SPEC-005
+    title: Shared resource specification
+    layer: spec
+    goal: Capture ports/db/cache/queue/external-api/secrets evidence and contention policy.
+    deps:
+      - T-SPEC-001
+    touched_paths:
+      - spec/resource_spec.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-006
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - global planning resource policy
+    verification_commands:
+      - test -f spec/resource_spec.yaml
+    evidence_paths:
+      - spec/resource_spec.yaml
+    human_gate: false
+    notes:
+      - Distinguish detected vs unknown resources.
+
+  - id: T-SPEC-006
+    title: Invariant specification
+    layer: spec
+    goal: Define invariants that future implementation must preserve.
+    deps:
+      - T-SPEC-002
+      - T-SPEC-005
+    touched_paths:
+      - spec/invariant_spec.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-007
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - test -f spec/invariant_spec.yaml
+    evidence_paths:
+      - spec/invariant_spec.yaml
+    human_gate: false
+    notes:
+      - Include cleanup and readiness honesty invariants.
+
+  - id: T-CONTRACT-001
+    title: Contract baseline decision
+    layer: contract
+    goal: Document why no concrete contract YAML is emitted beyond README in current evidence state.
+    deps:
+      - T-SPEC-001
+    touched_paths:
+      - contracts/README.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-008
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - test -f contracts/README.md
+    evidence_paths:
+      - contracts/README.md
+    human_gate: true
+    notes:
+      - Human confirmation needed once target business repository is provided.
+
+  - id: T-PLAN-001
+    title: Build scheduler-grade dev plan
+    layer: docs
+    goal: Produce fine-grained DAG with explicit layering, dependencies, and verification commands.
+    deps:
+      - T-SPEC-003
+      - T-SPEC-004
+      - T-SPEC-005
+      - T-SPEC-006
+      - T-CONTRACT-001
+    touched_paths:
+      - planning/dev_plan.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-009
+    parallel_safe: false
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - planning graph consistency
+    verification_commands:
+      - test -f planning/dev_plan.yaml
+    evidence_paths:
+      - planning/dev_plan.yaml
+    human_gate: false
+    notes:
+      - Ensure no unresolved deps and no overly broad tasks.
+
+  - id: T-PLAN-002
+    title: Build automation-grade acceptance spec
+    layer: docs
+    goal: Define explicit assertions/evidence for scope, cleanup, readiness, and scheduling correctness.
+    deps:
+      - T-PLAN-001
+    touched_paths:
+      - planning/acceptance_spec.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-010
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - acceptance id namespace
+    verification_commands:
+      - test -f planning/acceptance_spec.yaml
+    evidence_paths:
+      - planning/acceptance_spec.yaml
+    human_gate: false
+    notes:
+      - Include assertions for execution_ready false condition.
+
+  - id: T-PLAN-003
+    title: Run policy definition
+    layer: ops
+    goal: Define execution constraints, resource policies, retries, and manual gates.
+    deps:
+      - T-PLAN-001
+    touched_paths:
+      - planning/run_policy.yaml
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-011
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - execution policy
+      - human gate policy
+    verification_commands:
+      - test -f planning/run_policy.yaml
+    evidence_paths:
+      - planning/run_policy.yaml
+    human_gate: false
+    notes:
+      - Must explicitly restrict Phase1 auto-start.
+
+  - id: T-PLAN-004
+    title: Implement contract definition (thick receipt)
+    layer: docs
+    goal: Define per-task thick receipt fields for downstream executor reliability.
+    deps:
+      - T-PLAN-001
+      - T-PLAN-002
+    touched_paths:
+      - planning/implement.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-012
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - test -f planning/implement.md
+    evidence_paths:
+      - planning/implement.md
+    human_gate: false
+    notes:
+      - Must include attempt/layer/pass-fail acceptance fields.
+
+  - id: T-PLAN-005
+    title: Documentation and cleanup audit trail
+    layer: docs
+    goal: Record evidence sources, cleanup actions, preserved assets, and unresolved blockers.
+    deps:
+      - T-SPEC-001
+      - T-PLAN-003
+    touched_paths:
+      - planning/documentation.md
+      - planning/repo_cleanup_report.md
+      - artifacts/evidence/repo_tree_after_cleanup.txt
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-013
+      - AC-014
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - repository audit record
+    verification_commands:
+      - rg --files > artifacts/evidence/repo_tree_after_cleanup.txt
+      - test -f planning/repo_cleanup_report.md
+    evidence_paths:
+      - planning/documentation.md
+      - planning/repo_cleanup_report.md
+      - artifacts/evidence/repo_tree_after_cleanup.txt
+    human_gate: false
+    notes:
+      - Must separately report archived, deleted, unresolved conflicts.
+
+  - id: T-PLAN-006
+    title: Plan review checklist generation
+    layer: docs
+    goal: Generate expanded checklist for scheduler failure risks and human review rigor.
+    deps:
+      - T-PLAN-001
+      - T-PLAN-002
+      - T-PLAN-003
+      - T-PLAN-004
+    touched_paths:
+      - planning/plan_review_checklist.md
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-015
+    parallel_safe: true
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched: []
+    verification_commands:
+      - test -f planning/plan_review_checklist.md
+    evidence_paths:
+      - planning/plan_review_checklist.md
+    human_gate: false
+    notes:
+      - Include duplicate IDs, DAG cycle risk, touched-path overlap, shared resource collisions.
+
+  - id: T-PLAN-007
+    title: Final phase0 result publication
+    layer: docs
+    goal: Publish readiness split (planning_ready/execution_ready) with honest blockers and next step.
+    deps:
+      - T-PLAN-002
+      - T-PLAN-003
+      - T-PLAN-004
+      - T-PLAN-005
+      - T-PLAN-006
+    touched_paths:
+      - planning/phase0_result.json
+    forbidden_paths:
+      - .git/
+    acceptance_ids:
+      - AC-016
+      - AC-017
+    parallel_safe: false
+    needs_db: false
+    needs_ports: []
+    shared_resources_touched:
+      - readiness gates
+    verification_commands:
+      - test -f planning/phase0_result.json
+    evidence_paths:
+      - planning/phase0_result.json
+    human_gate: true
+    notes:
+      - execution_ready must remain false until real business code evidence is confirmed.

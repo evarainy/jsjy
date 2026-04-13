@@ -1,0 +1,42 @@
+modules:
+  - id: MOD-PLN-001
+    name: Business Planning Pack (Current True Source)
+    purpose: Provide prompt, output contract, and review checklist for business-repo Phase0/0.5 planning.
+    owned_paths:
+      - prompts/business_repo_plan_prompt.md
+      - templates/business_repo_output_contract.md
+      - checklists/business_repo_review_checklist.md
+      - codex_business_repo_plan_pack_v2/
+    public_interfaces:
+      - /plan prompt entrypoint contract
+      - planning artifact expectations
+    dependencies:
+      - Repository markdown/yaml files
+    risks:
+      - Duplicate copies between root and package directory can drift.
+
+  - id: MOD-PLN-002
+    name: Legacy Bootstrap Archive
+    purpose: Preserve historical planning/startup assets for audit without polluting current execution source.
+    owned_paths:
+      - planning_archive/legacy_bootstrap/
+    public_interfaces:
+      - audit-only historical references
+    dependencies:
+      - prior phase0 artifacts
+    risks:
+      - Accidental reuse of archived outdated templates.
+
+  - id: MOD-PLN-003
+    name: Phase0 Output Workspace
+    purpose: Hold new spec/planning/contracts outputs for scheduler and human review.
+    owned_paths:
+      - spec/
+      - planning/
+      - contracts/
+    public_interfaces:
+      - machine-readable YAML/JSON planning files
+    dependencies:
+      - source-of-truth planning prompt/contract/checklist
+    risks:
+      - Insufficient business evidence yields low execution confidence.

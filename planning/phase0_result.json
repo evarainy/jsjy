@@ -1,0 +1,56 @@
+{
+  "phase": "phase0_business_spec_first",
+  "status": "partial",
+  "generated_files": [
+    "planning/repo_cleanup_report.md",
+    "spec/product_spec.md",
+    "spec/product_spec.yaml",
+    "spec/module_spec.yaml",
+    "spec/resource_spec.yaml",
+    "spec/invariant_spec.yaml",
+    "contracts/README.md",
+    "planning/dev_plan.yaml",
+    "planning/acceptance_spec.yaml",
+    "planning/run_policy.yaml",
+    "planning/implement.md",
+    "planning/documentation.md",
+    "planning/plan_review_checklist.md",
+    "planning/phase0_result.json"
+  ],
+  "missing_files": [],
+  "blockers": [
+    "Target business repository identity is not confirmed.",
+    "No business source modules/config/test suites are present for implementation-grade planning.",
+    "Concrete API/event/queue contracts cannot be derived from current evidence."
+  ],
+  "risks": [
+    "If Phase1 starts now, tasks may be speculative and low-value.",
+    "Dual guidance entry locations may drift without sync governance."
+  ],
+  "repo_summary": {
+    "tech_stack": [
+      "Markdown",
+      "YAML",
+      "Git repository"
+    ],
+    "key_modules": [
+      "codex_business_repo_plan_pack_v2",
+      "prompts/business_repo_plan_prompt.md",
+      "templates/business_repo_output_contract.md",
+      "checklists/business_repo_review_checklist.md",
+      "planning_archive/legacy_bootstrap"
+    ],
+    "test_state": "No business test runner or app test suite discovered; only planning artifact checks are available.",
+    "unknowns": [
+      "actual business application structure",
+      "runtime/deployment stack",
+      "API/data contracts"
+    ]
+  },
+  "readiness": {
+    "planning_ready": true,
+    "execution_ready": false,
+    "reason": "Spec-first planning artifacts are complete for current evidence, but business implementation evidence is insufficient for safe Phase1 execution."
+  },
+  "next_step": "Provide or point to the real business repository/codebase, then refresh module/resource/contract specs and regenerate execution-facing dev_plan before entering Phase1."
+}

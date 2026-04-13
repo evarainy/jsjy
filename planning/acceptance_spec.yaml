@@ -1,0 +1,256 @@
+acceptance:
+  - id: AC-001
+    title: Repository evidence inventory captured
+    type: cli
+    trigger: Run repository tree inventory command.
+    expect:
+      exit_code: 0
+      file_exists: artifacts/evidence/repo_tree_after_cleanup.txt
+      file_contains_any:
+        - prompts/business_repo_plan_prompt.md
+        - planning/dev_plan.yaml
+    evidence:
+      - artifacts/evidence/repo_tree_after_cleanup.txt
+
+  - id: AC-002
+    title: True-source planning entry files exist at root
+    type: cli
+    trigger: Verify root truth-source files.
+    expect:
+      files_exist:
+        - prompts/business_repo_plan_prompt.md
+        - templates/business_repo_output_contract.md
+        - checklists/business_repo_review_checklist.md
+    evidence:
+      - prompts/business_repo_plan_prompt.md
+      - templates/business_repo_output_contract.md
+      - checklists/business_repo_review_checklist.md
+
+  - id: AC-003
+    title: product_spec.md has mandatory sections
+    type: other
+    trigger: Parse markdown section headers in spec/product_spec.md.
+    expect:
+      required_headers:
+        - "## Goals"
+        - "## In scope"
+        - "## Non-goals"
+        - "## Constraints"
+        - "## Assumptions"
+        - "## Dependencies"
+        - "## Risks"
+        - "## Open questions"
+        - "## Current repository evidence"
+    evidence:
+      - spec/product_spec.md
+
+  - id: AC-004
+    title: product_spec.yaml includes machine-readable framing fields
+    type: other
+    trigger: Inspect top-level keys in spec/product_spec.yaml.
+    expect:
+      required_keys:
+        - system_name
+        - goals
+        - in_scope
+        - non_goals
+        - constraints
+        - assumptions
+        - dependencies
+        - risks
+        - open_questions
+        - human_gates
+    evidence:
+      - spec/product_spec.yaml
+
+  - id: AC-005
+    title: module_spec enumerates observed planning-related modules only
+    type: other
+    trigger: Inspect module entries and owned paths.
+    expect:
+      min_module_count: 3
+      no_fabricated_business_module_without_evidence: true
+    evidence:
+      - spec/module_spec.yaml
+
+  - id: AC-006
+    title: resource_spec captures detected vs unknown resources explicitly
+    type: other
+    trigger: Inspect resource sections for detected arrays and policies.
+    expect:
+      required_sections:
+        - ports
+        - databases
+        - caches
+        - queues
+        - background_jobs
+        - external_apis
+        - secrets_and_config_domains
+    evidence:
+      - spec/resource_spec.yaml
+
+  - id: AC-007
+    title: invariant_spec defines planning and readiness invariants
+    type: other
+    trigger: Inspect invariants and enforcement mappings.
+    expect:
+      min_invariants: 4
+      includes_readiness_honesty_invariant: true
+    evidence:
+      - spec/invariant_spec.yaml
+
+  - id: AC-008
+    title: contracts README explains deferred contracts honestly
+    type: other
+    trigger: Inspect contracts/README.md.
+    expect:
+      contains_all:
+        - "No business API/event/queue/RPC contracts"
+        - "Deferred contract backlog"
+    evidence:
+      - contracts/README.md
+
+  - id: AC-009
+    title: dev_plan tasks contain required scheduler fields
+    type: integration
+    trigger: Validate each task in planning/dev_plan.yaml.
+    expect:
+      required_task_fields:
+        - id
+        - title
+        - layer
+        - goal
+        - deps
+        - touched_paths
+        - forbidden_paths
+        - acceptance_ids
+        - parallel_safe
+        - needs_db
+        - needs_ports
+        - verification_commands
+        - evidence_paths
+        - notes
+      allowed_layers:
+        - spec
+        - contract
+        - backend
+        - frontend
+        - integration
+        - e2e
+        - docs
+        - ops
+    evidence:
+      - planning/dev_plan.yaml
+
+  - id: AC-010
+    title: acceptance_spec uses concrete assertions and evidence
+    type: integration
+    trigger: Inspect acceptance items for expect/evidence concreteness.
+    expect:
+      every_item_has_expect: true
+      every_item_has_evidence: true
+      no_vague_statement_only: true
+    evidence:
+      - planning/acceptance_spec.yaml
+
+  - id: AC-011
+    title: run_policy declares execution + resources + failure policy
+    type: other
+    trigger: Inspect planning/run_policy.yaml top-level sections.
+    expect:
+      required_sections:
+        - execution
+        - shared_resources
+        - failure_policy
+      execution_has_phase1_gate: true
+    evidence:
+      - planning/run_policy.yaml
+
+  - id: AC-012
+    title: implement.md defines thick receipt schema
+    type: other
+    trigger: Inspect planning/implement.md structured result fields.
+    expect:
+      contains_all:
+        - task_id
+        - status
+        - attempt
+        - layer
+        - changed_files
+        - tests_run
+        - acceptance_ids_planned
+        - acceptance_ids_passed
+        - acceptance_ids_failed
+        - evidence_paths
+        - blockers
+        - risks
+        - needs_human
+        - error_code
+        - next_action
+    evidence:
+      - planning/implement.md
+
+  - id: AC-013
+    title: cleanup report includes required five sections
+    type: other
+    trigger: Inspect planning/repo_cleanup_report.md headings.
+    expect:
+      required_headings:
+        - "## 1) 保留的关键业务目录/文件（含仓库关键资产）"
+        - "## 2) 已归档的旧规划文件"
+        - "## 3) 删除的临时或重复文件"
+        - "## 4) 冲突但暂未处理"
+        - "## 5) 当前认定的唯一真源规划入口文件"
+    evidence:
+      - planning/repo_cleanup_report.md
+
+  - id: AC-014
+    title: legacy planning assets are archived, not blindly deleted
+    type: integration
+    trigger: Verify legacy files under planning_archive/legacy_bootstrap.
+    expect:
+      archived_paths_exist:
+        - planning_archive/legacy_bootstrap/codex_phase0_startup_pack_v2/
+        - planning_archive/legacy_bootstrap/dev_plan.yaml
+        - planning_archive/legacy_bootstrap/spec.md
+    evidence:
+      - planning/repo_cleanup_report.md
+      - artifacts/evidence/repo_tree_after_cleanup.txt
+
+  - id: AC-015
+    title: plan_review_checklist covers scheduler failure risks
+    type: other
+    trigger: Inspect planning/plan_review_checklist.md.
+    expect:
+      contains_all:
+        - duplicate task IDs
+        - duplicate acceptance IDs
+        - unresolved dependency IDs
+        - DAG cycle risk
+        - touched-path overlap risk
+        - shared resource collision risk
+    evidence:
+      - planning/plan_review_checklist.md
+
+  - id: AC-016
+    title: phase0_result separates planning_ready and execution_ready
+    type: other
+    trigger: Inspect planning/phase0_result.json readiness fields.
+    expect:
+      readiness_has:
+        - planning_ready
+        - execution_ready
+        - reason
+    evidence:
+      - planning/phase0_result.json
+
+  - id: AC-017
+    title: execution_ready remains false with insufficient business evidence
+    type: other
+    trigger: Inspect planning/phase0_result.json blockers and readiness.
+    expect:
+      execution_ready_equals: false
+      blockers_non_empty: true
+      next_step_non_empty: true
+    evidence:
+      - planning/phase0_result.json

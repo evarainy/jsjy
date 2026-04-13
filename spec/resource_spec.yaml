@@ -1,0 +1,34 @@
+resources:
+  ports:
+    detected: []
+    policy: No port allocation in Phase0. Define per-task isolated port blocks only after business services are discovered.
+
+  databases:
+    detected: []
+    migration_policy: No migration execution allowed until real DB stack and migration tooling are evidenced.
+
+  caches:
+    detected: []
+    policy: Undetermined due to missing business runtime evidence.
+
+  queues:
+    detected: []
+    policy: Undetermined due to missing business runtime evidence.
+
+  background_jobs:
+    detected: []
+    policy: Undetermined due to missing job runners or schedules.
+
+  external_apis:
+    detected:
+      - GitHub remote (repository hosting only)
+    policy: Treat external integration contracts as unknown until code/config evidence appears.
+
+  secrets_and_config_domains:
+    detected:
+      - git remote credentials observed in clone URL context
+    policy: avoid hardcoding secrets in tracked files; use environment-based secret management when business repo is confirmed.
+
+contention_points:
+  - Guidance source drift between root entry files and package-internal files.
+  - Legacy archived assets accidentally reintroduced into active planning.

@@ -1,0 +1,36 @@
+invariants:
+  - id: INV-001
+    statement: Never execute broad feature implementation during Phase0/0.5 planning.
+    scope: planning stage
+    enforcement:
+      - planning/dev_plan.yaml task layering
+      - planning/phase0_result.json readiness gating
+
+  - id: INV-002
+    statement: Real business assets must not be deleted during cleanup; uncertain legacy files should be archived first.
+    scope: repository cleanup
+    enforcement:
+      - planning/repo_cleanup_report.md action log
+      - use planning_archive/legacy_bootstrap for legacy planning files
+
+  - id: INV-003
+    statement: execution_ready must remain false when business source evidence is insufficient.
+    scope: phase0 result declaration
+    enforcement:
+      - planning/phase0_result.json readiness.execution_ready
+      - blockers/open_questions consistency checks
+
+  - id: INV-004
+    statement: All tasks must bind to concrete acceptance IDs and evidence paths.
+    scope: scheduling and verification
+    enforcement:
+      - planning/dev_plan.yaml acceptance_ids
+      - planning/acceptance_spec.yaml evidence
+
+  - id: INV-005
+    statement: Source-of-truth planning entry files must remain stable and discoverable at root paths.
+    scope: operator workflow
+    enforcement:
+      - prompts/business_repo_plan_prompt.md
+      - templates/business_repo_output_contract.md
+      - checklists/business_repo_review_checklist.md

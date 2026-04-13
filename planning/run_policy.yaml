@@ -1,0 +1,25 @@
+execution:
+  max_parallel_tasks: 3
+  sandbox_mode: danger-full-access
+  approval_policy: never
+  model: gpt-5.3-codex
+  reasoning_effort: high
+  phase_boundary: phase0_only_no_broad_implementation
+
+shared_resources:
+  source_of_truth_policy: Root paths prompts/templates/checklists for business_repo_plan are active truth-source entrypoints.
+  archive_policy: Legacy planning/bootstrap files must move to planning_archive/legacy_bootstrap before considering deletion.
+  port_policy: No runtime ports assigned in current repo state; allocate only when real services are evidenced.
+  db_migration_policy: DB migration tasks forbidden until actual DB stack/migrations are found.
+  env_isolation_policy: Evidence outputs must be written under artifacts/evidence with deterministic names.
+
+failure_policy:
+  max_retries: 2
+  circuit_breaker:
+    - unresolved target business repository identity
+    - missing runtime evidence for claimed modules/contracts
+    - readiness misreporting (execution_ready true without evidence)
+  manual_gate_conditions:
+    - Confirm target business repository and technology stack.
+    - Confirm single long-term source path strategy (root-only vs package-internal mirror).
+    - Confirm contract scope once business endpoints/events are discovered.

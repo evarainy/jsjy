@@ -1,0 +1,46 @@
+ D acceptance_spec.yaml
+ D artifacts/evidence/git_status_before.txt
+ D artifacts/evidence/phase0_validation.log
+ D artifacts/evidence/repo_inventory.txt
+ D artifacts/evidence/startup_pack_validation.log
+ D checklists/phase0_review_checklist.md
+ D codex_phase0_startup_pack_v2.zip
+ D codex_phase0_startup_pack_v2/.codex/config.toml.example
+ D codex_phase0_startup_pack_v2/AGENTS.md
+ D codex_phase0_startup_pack_v2/README.md
+ D codex_phase0_startup_pack_v2/planning/PLANS.md
+ D codex_phase0_startup_pack_v2/prompts/phase0_prompt.md
+ D codex_phase0_startup_pack_v2/schemas/acceptance_spec.schema.json
+ D codex_phase0_startup_pack_v2/schemas/dev_plan.schema.json
+ D codex_phase0_startup_pack_v2/schemas/output_schema_phase0.json
+ D codex_phase0_startup_pack_v2/schemas/run_policy.schema.json
+ D codex_phase0_startup_pack_v2/scripts/validate_phase0_outputs.py
+ D codex_phase0_startup_pack_v2/scripts/validate_startup_pack.py
+ D codex_phase0_startup_pack_v2/templates/acceptance_spec.template.yaml
+ D codex_phase0_startup_pack_v2/templates/contracts/contract.template.yaml
+ D codex_phase0_startup_pack_v2/templates/dev_plan.template.yaml
+ D codex_phase0_startup_pack_v2/templates/documentation.template.md
+ D codex_phase0_startup_pack_v2/templates/implement.template.md
+ D codex_phase0_startup_pack_v2/templates/run_policy.template.yaml
+ D codex_phase0_startup_pack_v2/templates/spec.template.md
+ D dev_plan.yaml
+ D documentation.md
+ D implement.md
+ D phase0_result.json
+ D prompts/codex_plan_mode_prompt.md
+ D run_policy.yaml
+ D schemas/acceptance_spec.schema.json
+ D schemas/dev_plan.schema.json
+ D schemas/output_schema_phase0.json
+ D schemas/run_policy.schema.json
+ D spec.md
+ D templates/phase0_output_contract.md
+?? artifacts/evidence/git_status_after_cleanup.txt
+?? artifacts/evidence/repo_tree_after_cleanup.txt
+?? checklists/business_repo_review_checklist.md
+?? contracts/
+?? planning/
+?? planning_archive/
+?? prompts/business_repo_plan_prompt.md
+?? spec/
+?? templates/business_repo_output_contract.md

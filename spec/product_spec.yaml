@@ -1,0 +1,43 @@
+system_name: jsjy-planning-repo
+
+goals:
+  - Build a spec-first planning package from repository evidence.
+  - Preserve real assets and archive obsolete planning bootstrap files safely.
+  - Provide machine-consumable scheduling artifacts for later controlled execution.
+
+in_scope:
+  - Repository cleanup and truth-source normalization for planning assets.
+  - Generate spec/planning/contracts phase0 files.
+  - Explicitly mark unknowns and execution blockers.
+
+non_goals:
+  - Broad implementation of backend/frontend/database features.
+  - Fabricating business APIs, modules, or deployment flows without evidence.
+
+constraints:
+  - Evidence-first conclusions only.
+  - Keep legacy assets archived rather than hard-deleted when uncertain.
+  - execution_ready must remain false until business repo evidence is sufficient.
+
+assumptions:
+  - Current repository is planning-heavy and business-code-light.
+  - business_repo_plan_prompt + contract + checklist are current planning source-of-truth entries.
+
+dependencies:
+  - Git repository access
+  - YAML/Markdown authoring
+  - Future availability of actual business source/config/test assets
+
+risks:
+  - Planning may become structurally complete but operationally under-informed.
+  - Dual path guidance can drift without strict sync rule.
+
+open_questions:
+  - Is this repo the final business implementation repo?
+  - What runtime stack and entrypoints should Phase1 target?
+  - Which CI/CD and environment conventions are mandatory?
+
+human_gates:
+  - Confirm target business repository before Phase1.
+  - Confirm single source-of-truth path strategy (pack-internal vs root entry files).
+  - Confirm contract expectations (API/events/queues) from real code evidence.
